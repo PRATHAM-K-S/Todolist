@@ -25,12 +25,12 @@ const Login = () => {
     }
   };
   return (
-    <Container className="flex flex-col h-[90vh] items-center justify-center gap-8">
+    <Container className="flex flex-col mx-auto h-[90vh] items-center justify-center gap-8">
       <h2 className="text-3xl font-bold">Todolist</h2>
       {error && <p className="text-red-600 font-semibold">{error}</p>}
       <form
         onSubmit={handleSubmit(signup)}
-        className="w-full flex flex-col gap-8"
+        className="w-3/4 sm:w-full flex flex-col gap-8"
       >
         {" "}
         <Controller
@@ -40,7 +40,6 @@ const Login = () => {
               type="email"
               placeholder="user@gmail.com"
               className="outline-none border-2 transition-all focus:border-black text-sm py-2"
-              control={control}
               {...field}
             />
           )}
@@ -56,7 +55,6 @@ const Login = () => {
               type="password"
               placeholder="password"
               className="outline-none border-2 transition-all focus:border-black text-sm py-2"
-              control={control}
               {...field}
             />
           )}

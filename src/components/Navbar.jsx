@@ -20,8 +20,8 @@ const Navbar = () => {
   };
 
   return (href !== "/signup" && href !== "/login") ? (
-    <nav className="my-6">
-      <div className="flex justify-between items-center sm:mx-auto mx-8 max-w-3xl">
+    <nav className="my-6 mx-8 md:max-w-2xl lg:max-w-4xl md:mx-auto">
+      <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Todolist</h1>
         {authStatus !== true ? (
           <div className="flex w-full justify-end gap-2">
@@ -30,7 +30,7 @@ const Navbar = () => {
             </Button>
             <ButtonOutline
               onClick={() => navigate("/signup")}
-              className="px-6 text-sm hover:bg-black hover:text-white transition-colors"
+              className="px-6 text-sm hidden sm:block hover:bg-black hover:text-white transition-colors"
             >
               Signup
             </ButtonOutline>
