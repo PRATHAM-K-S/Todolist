@@ -4,12 +4,12 @@ import { useHref, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import authService from "../appwrite/services/auth";
 import { logout } from "../store/features/authSlice";
+import { clearTodos } from "../store/features/todolListSlice";
 
 const Navbar = () => {
   const href = useHref();
   const navigate = useNavigate();
   const authStatus = useSelector((state) => state.auth.authStatus);
-  const userData = useSelector((state) => state.auth.userData);
   const dispatch = useDispatch();
 
   // {console.log(userData)}
@@ -17,6 +17,7 @@ const Navbar = () => {
   const logoutsession = async () => {
     await authService.logout();
     dispatch(logout());
+    dispatch(clearTodos())
   };
 
   return (href !== "/signup" && href !== "/login") ? (
