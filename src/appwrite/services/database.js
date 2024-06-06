@@ -1,4 +1,4 @@
-import { Client, Databases, ID, Query, } from "appwrite";
+import { Client, Databases, ID, Query } from "appwrite";
 import appwritekeys from "../../conf/conf";
 
 export class DatabaseService {
@@ -29,7 +29,20 @@ export class DatabaseService {
       return await this.databases.listDocuments(
         appwritekeys.appwriteDatabaseId,
         appwritekeys.appwriteCollectionId,
-        [Query.equal("userId",userId)]
+        [Query.equal("userId", userId)]
+      );
+    } catch (error) {
+      console.log("Appwrite Database Error:", error);
+    }
+  }
+
+  async updateTodos(id,data) {
+    try {
+      return await this.databases.updateDocument(
+        appwritekeys.appwriteDatabaseId,
+        appwritekeys.appwriteCollectionId,
+        id,
+        data
       );
     } catch (error) {
       console.log("Appwrite Database Error:", error);

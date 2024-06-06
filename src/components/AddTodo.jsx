@@ -1,26 +1,35 @@
-import React from "react";
-import { Button, Container, Input } from "./";
+import React, { useState } from "react";
+import { Button, Container, Input,Loader } from "./";
 import { useForm, Controller } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import appwriteDataService from "../appwrite/services/database";
-import { addTodos, increment } from "../store/features/todolListSlice";
+import { increment } from "../store/features/todolListSlice";
 
 const AddTodo = () => {
   const { control, handleSubmit, reset } = useForm();
   const userData = useSelector((state) => state.auth.userData);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
   // {console.log(userData)}
   const addTodo = async (...data) => {
     // console.log({...data[0],status:false,userId:userData.$id});
-    const todoData = await appwriteDataService.createTodo({
-      ...data[0],
-      status: false,
-      userId: userData.$id,
-    });
-    reset({ title: "", description: "" });
-    // console.log(todoData);
-    if (todoData) {
-      dispatch(increment());
+    try {
+      setLoading(true);
+      const todoData = await appwriteDataService.createTodo({
+        ...data[0],
+        status: false,
+        userId: userData.$id,
+      });
+      reset({ title: "", description: "" });
+      // console.log(todoData);
+      if (todoData) {
+        setLoading(false);
+        dispatch(increment());
+      }
+    } catch (error) {
+      setError(error);
     }
   };
   return (
@@ -44,8 +53,11 @@ const AddTodo = () => {
             control={control}
             defaultValue=""
           />
-          <Button type="submit" className="text-xs w-1/3">
-            Add Todo
+          <Button type="submit" className="text-xs w-1/2 sm:w-1/3 flex justify-center items-center gap-2">
+            Add Todo{" "}
+            {loading && (
+              <Loader width="w-3" height="h-3" fillColor="fill-white" />
+            )}
           </Button>
         </div>
         <Controller
