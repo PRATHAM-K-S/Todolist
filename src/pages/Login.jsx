@@ -35,7 +35,6 @@ const Login = () => {
         </div>
       )}
       <h2 className="text-3xl font-bold">Todolist</h2>
-      {error && <p className="text-red-600 font-semibold">{error}</p>}
       <form
         onSubmit={handleSubmit(signup)}
         className="w-3/4 sm:w-full flex flex-col gap-8"

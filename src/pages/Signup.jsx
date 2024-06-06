@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Button, Container,Loader } from "../components/";
+import { Input, Button, Container, Loader } from "../components/";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../appwrite/services/auth";
@@ -7,7 +7,11 @@ import { useDispatch } from "react-redux";
 import { login } from "../store/features/authSlice";
 
 const Signup = () => {
-  const { handleSubmit, control } = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -71,21 +75,24 @@ const Signup = () => {
           control={control}
           defaultValue=""
         />
-        <Controller
-          render={({ field }) => (
-            <Input
-              label="Password"
-              type="password"
-              placeholder="password"
-              className="outline-none border-2 transition-all focus:border-black text-sm py-2"
-              {...field}
-            />
-          )}
-          name="password"
-          rules={{ required: true }}
-          control={control}
-          defaultValue=""
-        />
+        <div>
+          <Controller
+            render={({ field }) => (
+              <Input
+                label="Password"
+                type="password"
+                placeholder="password"
+                className="outline-none border-2 transition-all focus:border-black text-sm py-2"
+                {...field}
+              />
+            )}
+            name="password"
+            rules={{ required: true, minLength: 8 }}
+            control={control}
+            defaultValue=""
+          />
+          {errors.password && <p className="text-xs text-red-700">Password must contain atleast 8 characters.</p>}
+        </div>
         <Button type="submit" className="hover:bg-gray-900 transition-all">
           Signup
         </Button>
