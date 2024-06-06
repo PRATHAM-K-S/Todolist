@@ -36,13 +36,25 @@ export class DatabaseService {
     }
   }
 
-  async updateTodos(id,data) {
+  async updateTodos(id, data) {
     try {
       return await this.databases.updateDocument(
         appwritekeys.appwriteDatabaseId,
         appwritekeys.appwriteCollectionId,
         id,
         data
+      );
+    } catch (error) {
+      console.log("Appwrite Database Error:", error);
+    }
+  }
+
+  async deleteTodo(id) {
+    try {
+      return await this.databases.deleteDocument(
+        appwritekeys.appwriteDatabaseId,
+        appwritekeys.appwriteCollectionId,
+        id
       );
     } catch (error) {
       console.log("Appwrite Database Error:", error);

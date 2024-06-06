@@ -2,15 +2,18 @@ import React, { usetitleRef, useState, useRef } from "react";
 import appwriteDataService from "../appwrite/services/database";
 import { useDispatch } from "react-redux";
 import { increment } from "../store/features/todolListSlice";
+import Loader from "./Loader";
 
 const Todo = ({ title, description, id }) => {
   const titleRef = useRef();
   const descRef = useRef();
-  const editRef = useRef();
   const [todoTitle, setTodoTitle] = useState(title);
   const [todoDescription, setTodoDescription] = useState(description);
   const [saveBtn, setSaveBtn] = useState(false);
   const dispatch = useDispatch();
+  const [error, setError] = useState("");
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
 
   const handleEdit = () => {
     setSaveBtn((prev) => !prev);
@@ -20,15 +23,34 @@ const Todo = ({ title, description, id }) => {
   };
 
   const handleSave = async () => {
-    const data = await appwriteDataService.updateTodos(titleRef.current.id, {
-      title: titleRef.current.value,
-      description: descRef.current.value,
-    });
-    if (data) {
-      dispatch(increment());
-      setSaveBtn((prev) => !prev);
-      titleRef.current.readOnly = true;
-    descRef.current.readOnly = true;
+    setError("");
+    setSaveLoading(true);
+    try {
+      const data = await appwriteDataService.updateTodos(titleRef.current.id, {
+        title: titleRef.current.value,
+        description: descRef.current.value,
+      });
+      if (data) {
+        dispatch(increment());
+        setSaveBtn((prev) => !prev);
+        titleRef.current.readOnly = true;
+        descRef.current.readOnly = true;
+        setSaveLoading(false);
+      }
+    } catch (error) {}
+  };
+
+  const handleDelete = async () => {
+    setError("");
+    setDeleteLoading(true);
+    try {
+      const data = await appwriteDataService.deleteTodo(titleRef.current.id);
+      if (data) {
+        dispatch(increment());
+        setDeleteLoading(false);
+      }
+    } catch (error) {
+      setError(error);
     }
   };
 
@@ -58,7 +80,6 @@ const Todo = ({ title, description, id }) => {
           <button
             type="button"
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-sm text-xs px-5 py-1 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-            ref={editRef}
             onClick={handleEdit}
           >
             Edit
@@ -67,17 +88,24 @@ const Todo = ({ title, description, id }) => {
         {saveBtn && (
           <button
             type="button"
-            className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-sm text-xs px-5 py-1 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-sm text-xs px-5 py-1 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 flex gap-2 items-center"
             onClick={handleSave}
           >
             Save
+            {saveLoading && (
+              <Loader width="w-3" height="h-3" fillColor="fill-white" />
+            )}
           </button>
         )}
         <button
           type="button"
-          className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-sm text-xs px-5 py-1 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+          className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-sm text-xs px-5 py-1 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 flex gap-2 items-center"
+          onClick={handleDelete}
         >
-          Delete
+          Delete{" "}
+          {deleteLoading && (
+            <Loader width="w-3" height="h-3" fillColor="fill-white" />
+          )}
         </button>
       </div>
     </div>
