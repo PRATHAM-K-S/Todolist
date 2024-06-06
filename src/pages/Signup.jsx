@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Button, Container } from "../components/";
+import { Input, Button, Container,Loader } from "../components/";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../appwrite/services/auth";
@@ -10,22 +10,30 @@ const Signup = () => {
   const { handleSubmit, control } = useForm();
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const signup = async (data) => {
-    setError("")
+    setError("");
+    setLoading(true);
     try {
       const userdata = await authService.createAccount(data);
       if (userdata) {
-        dispatch(login(userdata))
+        setLoading(false);
+        dispatch(login(userdata));
         navigate("/");
       }
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     }
   };
   return (
     <Container className="flex flex-col mx-auto h-[90vh] items-center justify-center gap-8">
+      {loading && (
+        <div className="h-[110%] w-full absolute flex justify-center items-center bg-white/60">
+          <Loader />
+        </div>
+      )}
       <h2 className="text-3xl font-bold">Todolist</h2>
       {error && <p className="text-red-600 font-semibold">{error}</p>}
       <form
