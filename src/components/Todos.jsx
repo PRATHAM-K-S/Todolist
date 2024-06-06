@@ -36,6 +36,7 @@ const Todos = () => {
               title={todo.title}
               description={todo.description}
               id={todo.$id}
+              status={todo.status}
             />
           );
         })}

@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { increment } from "../store/features/todolListSlice";
 import Loader from "./Loader";
 
-const Todo = ({ title, description, id }) => {
+const Todo = ({ title, description, id, status }) => {
   const titleRef = useRef();
   const descRef = useRef();
   const [todoTitle, setTodoTitle] = useState(title);
@@ -14,7 +14,7 @@ const Todo = ({ title, description, id }) => {
   const [error, setError] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
-  const [completed, setCompleted] = useState(false);
+  const [completed, setCompleted] = useState(status);
 
   const handleEdit = () => {
     setSaveBtn((prev) => !prev);
@@ -56,7 +56,7 @@ const Todo = ({ title, description, id }) => {
   };
 
   const handleCompleted = async () => {
-    setCompleted(!completed);
+    setCompleted((prev) => !prev);
     try {
       const result = await appwriteDataService.updateTodos(
         titleRef.current.id,
@@ -132,6 +132,7 @@ const Todo = ({ title, description, id }) => {
           onChange={handleCompleted}
           type="checkbox"
           className="accent-green-500 appearance-auto mt-2"
+          checked={completed}
         />
         <p className="mt-1">
           {completed ? (
