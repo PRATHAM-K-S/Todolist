@@ -21,7 +21,7 @@ const Todos = () => {
 
   useEffect(() => {
     authStatus && getTodos();
-  }, [useSelector((state) => state.todoList.todoCount)]);
+  }, [useSelector((state) => state.todoList.todoCount),authStatus]);
 
   return (
     <Container className="md:max-w-2xl lg:max-w-4xl mx-auto">
