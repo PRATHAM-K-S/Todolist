@@ -8,7 +8,10 @@ const Home = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     authService.getCurrentUser().then((data) => {
-      dispatch(login(data));
+      if(data){
+        dispatch(login(data));
+      }
+      else return
     });
   }, []);
 

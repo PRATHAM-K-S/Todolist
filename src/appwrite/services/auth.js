@@ -29,10 +29,14 @@ export class AuthService {
 
   async login({ email, password }) {
     try {
-      await this.account.createEmailPasswordSession(email, password);
-      return this.getCurrentUser();
+      const session = await this.account.createEmailPasswordSession(
+        email,
+        password
+      );
+      if (session) return this.getCurrentUser();
     } catch (error) {
-      console.log("Appwrite Error:", error);
+      console.log(error)
+      return false
     }
   }
 
